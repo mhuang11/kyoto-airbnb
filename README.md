@@ -16,14 +16,24 @@ This is an example one listing and their variables after successfully extracting
 
 The full list was exported as a .csv file and imported into R for cleaning.
 
-## Step 2: Cleaning Data Using R
-To put it simply, this is what I did to clean my .csv file:
+## Step 2: Cleaning Data Using Python and (mostly) R
+Before I exported the .csv file, there were a few things I needed to do in Python:
+- The listings didn't have their URLs as part of their variables, so I added URLs to each listing.
+- The first listing had their name cut off, manually corrected the name (minor tweak).
+
+To put it simply, this is what I did in R:
 - Filled in blanks with "N/A"
-- Split variables and created new columns (ex. Check-in and check-out times, number of bedrooms/beds/baths, etc.)
+- Split values and created new columns (ex. Check-in and check-out times, number of bedrooms/beds/baths, etc.)
 - Added a Yes/No column for Carbon Monoxide alarm
 - Added Cancellation flexibility column which values are either "Within 48 Hrs" or "Flexible"
+- Minor tweaks (ex. Listing 1 was the only listing that was "Entire Home" instead of "Entire home")
 
-## Step 3: Data Visualization Using Tableau
+After cleaning up the data, the dataset is ready for analysis.
+
+## Step 3: Data Analysis using Python and R
 
 
-## Step 4: Find Best Listings Using SQL
+## Step 4: Data Visualization Using R and Tableau
+
+
+## Step 5 (Extra): Writing Queries in SQL
