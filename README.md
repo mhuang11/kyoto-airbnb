@@ -19,7 +19,7 @@ The full list was exported as a .csv file and imported into R for cleaning.
 ## Step 2: Cleaning Data Using R
 To put it simply, this is what I did to clean my .csv file:
 - Filled in blanks with "N/A"
-- Split variables and created new columns (ex. Check-in and check-out times, add accomodation type, etc.)
+- Split variables and created new columns (ex. Check-in and check-out times, number of bedrooms/beds/baths, etc.)
 - Added a Yes/No column for Carbon Monoxide alarm
 - Added Cancellation flexibility column which values are either "Within 48 Hrs" or "Flexible"
 
