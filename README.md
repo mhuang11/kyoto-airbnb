@@ -28,7 +28,7 @@ To put it simply, this is what I did in R:
 - Added Cancellation flexibility column which values are either "Within 48 Hrs" or "Flexible"
 - Minor tweaks (ex. Listing 1 was the only listing that was "Entire Home" instead of "Entire home")
 
-After cleaning up the data, I exported the file to Tableau for visualization practice.
+After cleaning up the data, the dataset is ready for data analysis.
 
 ## Step 3: Data Analysis using Python and R
 
