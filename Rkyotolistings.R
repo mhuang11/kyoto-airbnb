@@ -1,6 +1,6 @@
 library(dplyr)
 
-file <- "C:\\Users\\parkj\\Documents\\Python\\AirBnB - Kyoto\\kyotolistings.csv"
+file <- "C:\\Users\\parkj\\OneDrive\\Documents\\Projects\\Test\\kyoto-airbnb\\kyotolistings.csv"
 data <- read.csv(file, header = TRUE, stringsAsFactors = FALSE)
 
 data$rating<- gsub(" ·", "", as.character(data$rating))
@@ -16,6 +16,9 @@ newdata["guests"] <- sapply(strsplit(data$guests_rooms, "\\s+"), '[', 1)
 newdata["bedrooms"] <- sapply(strsplit(data$guests_rooms, "\\s+"), '[', 4)
 newdata["beds"] <- sapply(strsplit(data$guests_rooms, "\\s+"), '[', 7)
 newdata["baths"] <- sapply(strsplit(data$guests_rooms, "\\s+"), '[', 10)
+
+#Make accomodation "type" consistent (remove "hosted by ...")
+newdata["type"] <- sapply(strsplit(as.character(newdata$type), split="hosted"), '[', 1)
 
 # If the bath is N/A, it should copy the value in beds and make beds N/A instead (guests-bedrooms-bath)
 newdata["baths2"] <- newdata["baths"]
@@ -36,8 +39,18 @@ newdata["badge_desc"] <- data["rarity_desc"]
 #Get check-in and check-out times
 newdata["checkin"] <- sapply(strsplit(data$house_rules, split = "Check-in: |Checkout: |Self|No"), '[', 2)
 newdata["checkout"] <- sapply(strsplit(data$house_rules, split = "Check-in: |Checkout: |Self|No|Photo|Show"), '[', 3)
+
+#Dividing the Check-in times to From and Until to clean it up further:
+newdata["checkin_from"] <- sapply(strsplit(as.character(newdata$checkin), split = "-"), '[', 1)
+newdata["checkin_until"] <- sapply(strsplit(as.character(newdata$checkin), split = "-"), '[', 2)
+#And remove checkin
+newdata["checkin"] <- NULL
+#Relocate the new columns before checkout
+newdata <- newdata %>% relocate("checkin_from", .before = "checkout")
+newdata <- newdata %>% relocate("checkin_until", .before = "checkout")
+
 #All values are correct except for row 126 and 221, should be N/A
-newdata[126, "checkout"] <- NA
+newdata[127, "checkout"] <- NA
 newdata[221, "checkout"] <- NA
 
 #Check for Carbon Monoxide (CO) alarm
@@ -54,11 +67,21 @@ newdata["host"] <- data["host"]
 newdata["host_response"] <- sapply(strsplit(data$host_response, split = "Response rate: |Response"), '[', 2)
 newdata["url"] <- data["url"]
 
-#There are a few listings that were removed (row 200 and 220) during the time I am cleaning so I am removing those (no host and broken URL)
+#There are a few listings that were removed during the time I am cleaning so I am removing those (no host and broken URL)
 library(tidyr)
-newdata[200, "host"] <- NA
 newdata[220, "host"] <- NA
+newdata[218, "host"] <- NA
+newdata[200, "host"] <- NA
+newdata[155, "host"] <- NA
 newdata <- newdata %>% drop_na(host)
 
+#Only first line is "Entire Home", make it "Entire home"
+newdata[1, "type"] <- "Entire home"
+
+#190 and 192 need minor tweaking, the room is a rare case (ex. instead of "Studio" for bedroom, changing it to 1)
+newdata[190, "bedrooms"] <- 1
+newdata[190, "baths"] <- 1
+newdata[192, "baths"] <- 1
+
 #Export newdata as csv
-write.csv(newdata,"C:\\Users\\parkj\\Documents\\Python\\AirBnB - Kyoto\\cleankyotolistings.csv", row.names = TRUE)
+write.csv(newdata,"C:\\Users\\parkj\\OneDrive\\Documents\\Projects\\Test\\kyoto-airbnb\\cleankyotolistings.csv", row.names = TRUE)
