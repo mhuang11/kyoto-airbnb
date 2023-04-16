@@ -33,7 +33,12 @@ After cleaning up the data, the dataset is ready for analysis.
 ## Step 3: Data Analysis using Python and R
 
 
-## Step 4: Data Visualization Using R and Tableau
+## Step 4: Data Visualization Tableau
 
+I created a simple interactive dashboard on Tableau using the data cleaned in R.
+You can select a property type (entire homes, condo/apt., or private rooms).
+The dashboard will display what city in Kyoto has how many reviews (popularity) and its' rating (value) under "Top Region Ratings", the number of guests that property type can accommodate in a city, and the total prices of those property types on a map. 
+
+![image](https://user-images.githubusercontent.com/78035136/232318225-ba5a1d35-60b7-4b97-bf55-c9cf34092c42.png)
 
 ## Step 5 (Extra): Writing Queries in SQL
