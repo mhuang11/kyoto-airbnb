@@ -26,6 +26,7 @@ To put it simply, this is what I did in R:
 - Split values and created new columns (ex. Check-in and check-out times, number of bedrooms/beds/baths, etc.)
 - Added a Yes/No column for Carbon Monoxide alarm
 - Added Cancellation flexibility column which values are either "Within 48 Hrs" or "Flexible"
+- Simplified the property types to Entire Homes, Apartments/Condos, and Private Rooms.
 - Minor tweaks (ex. Listing 1 was the only listing that was "Entire Home" instead of "Entire home")
 
 After cleaning up the data, the dataset is ready for analysis.
