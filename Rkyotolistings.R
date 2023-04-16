@@ -69,26 +69,28 @@ newdata["url"] <- data["url"]
 
 #Get Location (City Only)
 newdata$city <- NA
-newdata$city[grep('Shimo', data$location)] <- 'Shimogyo'
-newdata$city[grep('下京', data$location)] <- 'Shimogyo'
-newdata$city[grep('Nakagy', data$location)] <- 'Nakagyo'
-newdata$city[grep('中京', data$location)] <- 'Nakagyo'
-newdata$city[grep('Minami', data$location)] <- 'Minami'
-newdata$city[grep('南', data$location)] <- 'Minami'
-newdata$city[grep('Higashiyama', data$location)] <- 'Higashiyama'
-newdata$city[grep('東山', data$location)] <- 'Higashiyama'
-newdata$city[grep('Saky', data$location)] <- 'Sakyo'
-newdata$city[grep('左京', data$location)] <- 'Sakyo'
-newdata$city[grep('Kamig', data$location)] <- 'Kamigyo'
-newdata$city[grep('上京', data$location)] <- 'Kamigyo'
-newdata$city[grep('Kita', data$location)] <- 'Kita'
-newdata$city[grep('北', data$location)] <- 'Kita'
-newdata$city[grep('Fushimi', data$location)] <- 'Fushimi'
-newdata$city[grep('伏見', data$location)] <- 'Fushimi'
-newdata$city[grep('Ukyo', data$location)] <- 'Ukyo'
-newdata$city[grep('右京', data$location)] <- 'Ukyo'
+newdata$city[grep('Shimo|下京', data$location)] <- 'Shimogyo'
+newdata$city[grep('Nakagy|中京', data$location)] <- 'Nakagyo'
+newdata$city[grep('Minami|南', data$location)] <- 'Minami'
+newdata$city[grep('Higashiyama|東山', data$location)] <- 'Higashiyama'
+newdata$city[grep('Saky|左京', data$location)] <- 'Sakyo'
+newdata$city[grep('Kamig|上京', data$location)] <- 'Kamigyo'
+newdata$city[grep('Kita|北', data$location)] <- 'Kita'
+newdata$city[grep('Fushimi|伏見', data$location)] <- 'Fushimi'
+newdata$city[grep('Ukyo|右京', data$location)] <- 'Ukyo'
 #Reorder "city"
 newdata <- newdata %>% relocate("city", .before = "superhost")
+
+#Describe property type as Entire Home, Condos/Apt, or Private Room.
+newdata$property <- NA
+newdata$property[grep('Entire home|Entire Home|Entire townhouse|Entire vacation home|Entire villa|Hut|Tiny home', newdata$type)] <- 'Entire home'
+newdata$property[grep('Entire condo|Entire rental unit|Entire serviced apartment|aparthotel', newdata$type)] <- 'Condo/Apt'
+newdata$property[grep('guest suite|Private room|boutique|Room in hotel', newdata$type)] <- 'Private room'
+#Reorder "property"
+newdata <- newdata %>% relocate("property", .before = "city")
+
+#Change value type in "beds" from character to integer
+newdata$beds <- strtoi(newdata$beds, base=16)
 
 #There are a few listings that were removed during the time I am cleaning so I am removing those (no host and broken URL)
 library(tidyr)
@@ -108,3 +110,4 @@ newdata[192, "baths"] <- 1
 
 #Export newdata as csv
 write.csv(newdata,"C:\\Users\\parkj\\OneDrive\\Documents\\Projects\\Test\\kyoto-airbnb\\cleankyotolistings.csv", row.names = TRUE)
+
