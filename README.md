@@ -33,7 +33,7 @@ After cleaning up the data, the dataset is ready for analysis.
 ## Step 3: Data Analysis using Python and R
 
 
-## Step 4: Data Visualization Tableau
+## Step 4: Data Visualization using Tableau
 
 I created a simple interactive dashboard on Tableau using the data cleaned in R.
 You can select a property type (entire homes, condo/apt., or private rooms).
