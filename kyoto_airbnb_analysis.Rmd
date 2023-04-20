@@ -93,7 +93,7 @@ airbnb %>%
 
 ### Observations
 1. Average price of listings is the highest for Fushimi (256.45 USD) followed by Higashiyama (134.87 USD), which is only 0.37 USD more expensive than Kamigyo (134.50 USD). 
-2. There was only 1 listing in Fushimi, and that should be taken under consideration. If this one listing for Fushimi were to be neglected as an outlier, Higashiyama and Kamigyo would be the top 2 in average prices. 
+2. There was only 1 listing in Fushimi, and that should be considered an outlier. If this single listing for Fushimi were to be neglected, Higashiyama and Kamigyo would be the top 2 in average prices. 
 3. Ukyo has the cheapest listings with an average price of 87.5 USD. 
 
 ## Mean Price Comparison For Each Room Type
@@ -128,7 +128,115 @@ airbnb %>%
 ### Observation
 1. Average price is highest for Entire Homes, followed by Condo/Apt, which is expected since entire homes tend to have larger rooms and multiple stories.
 
+\newpage
 
 # Modelling
 
 ## Data Splitting
+We will split the data into Training set and Testing sets in the ratio of 70:30 so that we can use the testing set to validate our model. Training set will be 70% of the original data. We will use the test data set in the future for testing and prediction purposes. In order to remove the outliers, we are filtering the `airbnb` data by removing the extreme values of price from both sides (10% from both the ends). They would make the predictive models significantly weaker.
+
+Removing Outliers:
+```{r, warning=FALSE, results='hide',message=FALSE}
+airbnb_filtered <- airbnb %>%
+  filter(per_night < quantile(airbnb$per_night, 0.9) & per_night > 
+           quantile(airbnb$per_night, 0.1))
+
+#row 86 had "Kyoto" under "reviews", deleting. 
+airbnb_filtered[86, "reviews"] <- NA
+airbnb_filtered <- airbnb_filtered %>% drop_na(reviews)
+
+#change type for "rating" and "reviews" to numeric
+airbnb_filtered$rating <- as.double(airbnb_filtered$rating)
+airbnb_filtered$reviews <- as.double(airbnb_filtered$reviews)
+```
+
+Creating Train and Test Sets:
+```{r, warning=FALSE, results='hide',message=FALSE}
+set.seed(123456)
+colnames(airbnb)[1] = "id"
+airbnb_filtered <- airbnb_filtered %>% mutate(id = row_number())
+airbnb_train <- airbnb_filtered %>% sample_frac(0.7)
+airbnb_test <- anti_join(airbnb_filtered, airbnb_train, by = "id")
+```
+
+Check if Train Set + Test Set = Total Number of Observations in the Original Data Set:
+```{r}
+nrow(airbnb_train) + nrow(airbnb_test) == nrow(airbnb_filtered)
+```
+
+### Observations
+1. The resulting training data set has 121 observations and testing data set has 52 observations.
+
+
+### Summary of Variables Excluded:
+In our model, we won't be considering the below variables and the reasons in the summary below.
+
+- id: Unique Identifier, not relevant to the study
+- name: Identifier, not relevant to the study
+- type: Redundant, we are already taking property in our study
+- badge_desc: It describes the badges on a listing, will unnecessarily complicate our model
+- checkin_until: Most listings do not have this variable, and is not necessary. Checkin_from is. 
+- host: Identifier, not relevant to the study
+- url: Unique Identifier, not relevant to the study
+- host_response: Redundant, almost all variables are 100%
+
+Hence, we try to predict the **price** of the AirBnBs using the remaining covariates:
+
+- property
+- city
+- superhost
+- guests
+- bedrooms
+- beds
+- baths
+- rating
+- reviews
+- badge
+- checkin_from
+- checkout
+- CO_alarm
+- free_cancellation
+- per_night
+- total_price
+
+## Model Building Process: Linear Regression Model
+
+We  will build our initial linear model using all the variables that we have selected for the study.
+
+```{r, warning=FALSE, results='hide',message=FALSE}
+airbnb_model_1 <- lm(total_price ~  property + city + superhost + 
+                       guests + rating + reviews + badge + checkin_from + 
+                       checkout + CO_alarm + free_cancellation + 
+                       per_night, data = airbnb_train)
+
+summary_model_1 <- summary(airbnb_model_1)
+rmse_1 <- summary_model_1$sigma
+r_sq_1 <- summary_model_1$r.squared
+adj_r_sq_1 <- summary_model_1$adj.r.squared
+
+# summary_model_1
+```
+
+
+### Model 1 Observations:
+- RMSE: 148.92
+- R-squared: 0.865
+- Adjusted R-squared: 0.739
+
+## Plot of the Linear Regression Model
+
+```{r, warning=FALSE, results='hide',message=FALSE}
+par(mfrow = c(2,2))
+plot(airbnb_model_1)
+```
+
+### Observations
+1. Residuals vs. Fitted values shows that some of the dots "stand out" at the bottom center of the graph, indicating that there are some  outliers. Most values are hovering over zero, which does not show a constant variance around X. The equal variance assumption is not satisfied. Otherwise, the graph would "bounce randomly" around the 0 line which suggests that the relationship is linear is reasonable. 
+
+2. QQ Plot shows a 45 degree line, meaning that Normality assumptions are met. The bottom part of the line is slightly skewed, so it may be considered that the data set is skewed left.
+
+\newpage
+
+# Conclusion
+
+
