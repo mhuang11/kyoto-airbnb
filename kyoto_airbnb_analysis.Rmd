@@ -11,6 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # Load Packages
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(boot))
 
 # Load Dataset
 airbnb <- read_csv("cleankyotolistings.csv")
@@ -210,7 +211,7 @@ airbnb_model_1 <- lm(total_price ~  property + city + superhost +
                        per_night, data = airbnb_train)
 
 summary_model_1 <- summary(airbnb_model_1)
-rmse_1 <- summary_model_1$sigma
+mse_1 <- summary_model_1$sigma^2
 r_sq_1 <- summary_model_1$r.squared
 adj_r_sq_1 <- summary_model_1$adj.r.squared
 
@@ -219,7 +220,7 @@ adj_r_sq_1 <- summary_model_1$adj.r.squared
 
 
 ### Model 1 Observations:
-- RMSE: 148.92
+- MSE: 22175.93
 - R-squared: 0.865
 - Adjusted R-squared: 0.739
 
@@ -235,8 +236,71 @@ plot(airbnb_model_1)
 
 2. QQ Plot shows a 45 degree line, meaning that Normality assumptions are met. The bottom part of the line is slightly skewed, so it may be considered that the data set is skewed left.
 
+# Validation and Prediction
+
+## In-Sample Model Evaluation (Train Error)
+
+MSE of the Linear Regression Model
+```{r, warning=FALSE, results='hide',message=FALSE}
+(summary_model_1$sigma)^2
+```
+R Squared of the Linear Regression model
+```{r, warning=FALSE, results='hide',message=FALSE}
+(summary_model_1$r.squared)
+```
+
+Adjusted R Squared of the Linear Regression model
+```{r, warning=FALSE, results='hide',message=FALSE}
+(summary_model_1$adj.r.squared)
+```
+
+## Out-of-Sample Prediction (Test Error)
+
+To evaluate how the model performs on future data, we use predict() to get the predicted values from the test set.
+```{r, warning=FALSE, results='hide',message=FALSE}
+pi <- predict(object = airbnb_model_1, newairbnb = airbnb_test)
+```
+
+Mean Squared Error (MSE) of the final Model:
+```{r, warning=FALSE, results='hide',message=FALSE}
+mean((pi - airbnb_test$total_price)^2)
+```
+Mean Absolute Error (MAE) of the Final Model - Test Data.
+```{r, warning=FALSE, results='hide',message=FALSE}
+mean(abs(pi - airbnb_test$total_price))
+```
+## Cross Validation of the Linear Regression Model
+
+MSPE of the Full Filtered Data
+```{r, warning=FALSE, results='hide',message=FALSE}
+model_glm_1 = glm(total_price ~  property + superhost + 
+                       guests + per_night, data = airbnb_filtered)
+
+cv.glm(data =airbnb_filtered, glmfit = model_glm_1, K = 3)$delta[2]
+```
+Comparing the MSE of Test data set which is equal to 22176, and the MSPE of the Full Data which is 20418, the values are almost similar. Hence the variables that have been selected for the model are good estimators for our dependent variable. 
+
+
 \newpage
 
 # Conclusion
+
+### Summary of Purpose
+To analyze the Kyoto AirBnB data set and find interesting insights related to the factors that affect the prices of listings in Kyoto area. I tried to answer the following questions using my analysis:
+
+- How do prices vary with respect to other factors?
+- How are rental properties distributed across cities in Kyoto?
+
+### Methodology
+I used a linear regression method to create a model that would help predict prices of listing based on relevant factors. I started with gathering data directly from AirBnB through web-scraping. After cleaning the data set, it was split into training and testing data sets in the ratio of 70:30. I created a linear regression model using all the variables that I thought were relevant. Next, I performed in-sample validation, out-sample prediction and cross-validation techniques on the model. Upon validation, I found that MSPE of Test data set i.e. 22176 is almost similar to the MSPSE of the Full Data i.e. 20416. Hence, we could conclude that the Model used for analysis, predicts the variable with a good fit. 
+
+### Interesting Insights from Analysis
+
+- Entire homes are the most common listing type in all cities except Ukyo, where Entire homes and Condo/Apt are equally the most common (one of each).
+- Private rooms are the least common type of listings.
+- Average price of listings is the highest for Fushimi, followed by Higashiyama.
+- Ukyo has the cheapest listings with the average price of 47.24 USD
+- Average price is the highest for Entire home/apartment followed by Condo/Apt. 
+- The factors that impact listing prices are: Property type, city (location), superhost status, and number of guests.
 
 
