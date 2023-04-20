@@ -42,7 +42,7 @@ Created 3 graphs that visualizes the data set by listing price, location, and ac
 
 ![image](https://user-images.githubusercontent.com/78035136/233415492-33585445-98c8-4a36-b97e-15c359780374.png)
 
-Linear Regressino Model
+Linear Regression Model
 
 ![image](https://user-images.githubusercontent.com/78035136/233415867-9eb7ccf5-bc9a-42b6-85a8-7e3e79e6840d.png)
 
