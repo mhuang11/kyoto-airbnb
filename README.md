@@ -31,8 +31,24 @@ To put it simply, this is what I did in R:
 
 After cleaning up the data, the dataset is ready for analysis.
 
-## Step 3: Data Analysis using Python and R
+## Step 3: Data Analysis Using R
 
+Exploratory Data Analysis:
+
+Created 3 graphs that visualizes the data set by listing price, location, and accomodation type.
+![image](https://user-images.githubusercontent.com/78035136/233415278-e660b4a7-d335-4652-b420-d9c526b55190.png)
+
+![image](https://user-images.githubusercontent.com/78035136/233415344-1f7dee2a-61b6-41b8-abad-86536d768c44.png)
+
+![image](https://user-images.githubusercontent.com/78035136/233415492-33585445-98c8-4a36-b97e-15c359780374.png)
+
+Linear Regressino Model
+
+![image](https://user-images.githubusercontent.com/78035136/233415867-9eb7ccf5-bc9a-42b6-85a8-7e3e79e6840d.png)
+
+(Observations are in RMarkdown PDF file.)
+
+The purpose was to analyze the Kyoto AirBnB data set and find interesting insights related to the factors thtat affect the prices of listings in Kyoto area. The linear regression method was used to create a model that would help predict prices of a listing based on relevent factors. The dataset was split between training and testing data sets in the ratio of 70:30 and used in-sample validation, out-sample prediction, and cross-validation techniques. Upon validation, the MSPE of the test data i.e. 22176 was almost similar to the MSPSE of the full data i.e. 20416. Hence, it's concluded that the model used for analysis predicts the variable a good fit. 
 
 ## Step 4: Data Visualization using Tableau
 
