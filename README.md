@@ -1,6 +1,5 @@
 # Kyoto AirBnB Analysis
-Analyzing which listing for a week stay in Kyoto, Japan has the best value.
-The purpose of this project was to practice Python, R, Tableau, and SQL.
+The purpose of this project was to practice using Python, R, and Tableau.
 
 ## Step 1: Data Scraping Using Python
 2 Key packages used: BeautifulSoup and Selenium WebDriver.
@@ -57,5 +56,3 @@ You can select a property type (entire homes, condo/apt., or private rooms).
 The dashboard will display what city in Kyoto has how many reviews (popularity) and its' rating (value) under "Top Region Ratings", the number of guests that property type can accommodate in a city, and the total prices of those property types on a map. 
 
 ![image](https://user-images.githubusercontent.com/78035136/232318225-ba5a1d35-60b7-4b97-bf55-c9cf34092c42.png)
-
-## Step 5 (Extra): Writing Queries in SQL
